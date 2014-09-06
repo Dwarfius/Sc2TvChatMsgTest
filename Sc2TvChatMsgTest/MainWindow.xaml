@@ -6,10 +6,11 @@
         <TextBox Height="23" HorizontalAlignment="Left" Margin="77,72,0,0" Name="cookiesBox" VerticalAlignment="Top" Width="414" />
         <Label Content="Cookies" Height="26" HorizontalAlignment="Left" Margin="12,69,0,0" Name="cookiesLbl" VerticalAlignment="Top" Width="59" />
         <Button Content="Send" Height="23" HorizontalAlignment="Left" Margin="416,101,0,0" Name="sendBtn" VerticalAlignment="Top" Width="75" Click="sendBtn_Click" />
-        <Button Content="Login" Height="23" HorizontalAlignment="Left" Margin="417,43,0,0" Name="loginBtn" VerticalAlignment="Top" Width="75" Click="loginBtn_Click" />
+        <Button Content="WebRequest Login" Height="23" HorizontalAlignment="Left" Margin="365,43,0,0" Name="loginBtn" VerticalAlignment="Top" Width="127" Click="loginBtn_Click" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="60,14,0,0" Name="nameBox" VerticalAlignment="Top" Width="186" />
         <Label Content="Name" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="nameLbl" VerticalAlignment="Top" />
         <Label Content="Password" Height="28" HorizontalAlignment="Left" Margin="252,12,0,0" Name="passLbl" VerticalAlignment="Top" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="318,14,0,0" Name="passBox" VerticalAlignment="Top" Width="174" />
+        <Button Content="WebClient Login" Height="23" HorizontalAlignment="Left" Margin="252,43,0,0" Name="webClientLoginBtn" VerticalAlignment="Top" Width="107" Click="webClientLoginBtn_Click" />
     </Grid>
 </Window>

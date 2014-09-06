@@ -74,11 +74,17 @@ namespace Sc2TvChatMsgTest
             int ind = data.IndexOf(searchStr);
             string formId = data.Substring(ind + searchStr.Length, 37);
             
-            //login - adding cookies
+            //login - attempt to recieve cookies
             string name = nameBox.Text;
             string pass = passBox.Text;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(baseUrl + "all?destination=node");
+            req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
             req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0";
+            req.KeepAlive = true;
+            req.Headers = new WebHeaderCollection();
+            req.Headers.Add("Accept-Language", "en-US,en;q=0.5");
+            req.Headers.Add("Accept-Encoding", "gzip, deflate");
+            req.Referer = "http://sc2tv.ru/";
             req.Method = "POST";
             req.CookieContainer = new CookieContainer();
 
@@ -94,7 +100,13 @@ namespace Sc2TvChatMsgTest
             //looking for required cookie (SESS4a29996287c6a61196a9cfc443f0fdb3)
             resp = (HttpWebResponse)req.GetResponse();
             resp.Close();
-            MessageBox.Show(resp.Cookies[0].ToString());
+            MessageBox.Show(resp.Cookies[0].Name);
+        }
+
+        //this is an attemp at using a webclient for it
+        private void webClientLoginBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
