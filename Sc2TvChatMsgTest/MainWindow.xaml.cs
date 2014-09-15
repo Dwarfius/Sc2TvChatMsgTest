@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net;
 using System.IO;
+using System.Collections;
+using Newtonsoft.Json;
 
 namespace Sc2TvChatMsgTest
 {
@@ -25,30 +27,12 @@ namespace Sc2TvChatMsgTest
         const string gate = "http://chat.sc2tv.ru/gate.php";
         const string referrer = "http://sc2tv.ru/channel/czt";
 
-        List<Cookie> cookies = new List<Cookie>();
+        CookieCollection cookies;
+        UserData userdata;
 
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void sendBtn_Click(object sender, RoutedEventArgs e)
-        {
-            WebRequest request = WebRequest.Create(gate + "?task=GetUserInfo&ref=" + referrer);
-            string[] cookies = cookiesBox.Text.Replace(" ", "").Split(';');
-            (request as HttpWebRequest).CookieContainer = new CookieContainer();
-            foreach (string cookie in cookies)
-            {
-                string[] cookieParts = cookie.Split('=');
-                Cookie c = new Cookie(cookieParts[0], cookieParts[1]) { Domain = "chat.sc2tv.ru" }; 
-                (request as HttpWebRequest).CookieContainer.Add(c);
-            }
-            WebResponse resp = request.GetResponse();
-            StreamReader streamReader = new StreamReader(resp.GetResponseStream());
-            string data = streamReader.ReadToEnd();
-            streamReader.Close();
-            resp.Close();
-            MessageBox.Show(data);
         }
 
         private void loginBtn_Click(object sender, RoutedEventArgs e)
@@ -95,9 +79,49 @@ namespace Sc2TvChatMsgTest
             //looking for required cookie (SESS4a29996287c6a61196a9cfc443f0fdb3)
             resp = (HttpWebResponse)req.GetResponse();
             resp.Close();
-            string cookiesStr = resp.Headers["Set-Cookie"];
+            cookies = resp.Cookies;
 
+            SendChatLogin();
+        }
 
+        void SendChatLogin()
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(gate + "?task=GetUserInfo&ref=" + referrer);
+            request.CookieContainer = new CookieContainer();
+            request.CookieContainer.Add(cookies["SESS4a29996287c6a61196a9cfc443f0fdb3"]);
+            WebResponse resp = request.GetResponse();
+            StreamReader streamReader = new StreamReader(resp.GetResponseStream());
+            string data = streamReader.ReadToEnd();
+            streamReader.Close();
+            resp.Close();
+            userdata = JsonConvert.DeserializeObject<UserData>(data);
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(gate);
+            request.Method = "POST";
+            request.AllowAutoRedirect = false;
+            request.CookieContainer = new CookieContainer();
+            request.CookieContainer.Add(cookies["SESS4a29996287c6a61196a9cfc443f0fdb3"]);
+
+            request.ContentType = "application/x-www-form-urlencoded";
+            string msg = msgBox.Text.Replace(' ', '+');
+            string data = "task=WriteMessage&message=" + msg + "&channel_id=0&token=" + userdata.token;
+            byte[] dataBytes = Encoding.Default.GetBytes(data);
+            request.ContentLength = dataBytes.Length;
+            Stream stream = request.GetRequestStream();
+            stream.Write(dataBytes, 0, dataBytes.Length);
+            stream.Close();
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            StreamReader reader = new StreamReader(response.GetResponseStream());
+            data = reader.ReadToEnd();
+            reader.Close();
+            response.Close();
+            userdata = JsonConvert.DeserializeObject<UserData>(data);
+            if (userdata.error != "")
+                MessageBox.Show("Error");
         }
     }
 }

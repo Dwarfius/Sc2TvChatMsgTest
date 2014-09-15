@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="77,72,0,0" Name="cookiesBox" VerticalAlignment="Top" Width="414" />
-        <Label Content="Cookies" Height="26" HorizontalAlignment="Left" Margin="12,69,0,0" Name="cookiesLbl" VerticalAlignment="Top" Width="59" />
-        <Button Content="Send" Height="23" HorizontalAlignment="Left" Margin="416,101,0,0" Name="sendBtn" VerticalAlignment="Top" Width="75" Click="sendBtn_Click" />
         <Button Content="WebRequest Login" Height="23" HorizontalAlignment="Left" Margin="365,43,0,0" Name="loginBtn" VerticalAlignment="Top" Width="127" Click="loginBtn_Click" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="60,14,0,0" Name="nameBox" VerticalAlignment="Top" Width="186" />
         <Label Content="Name" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="nameLbl" VerticalAlignment="Top" />
         <Label Content="Password" Height="28" HorizontalAlignment="Left" Margin="252,12,0,0" Name="passLbl" VerticalAlignment="Top" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="318,14,0,0" Name="passBox" VerticalAlignment="Top" Width="174" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="12,72,0,0" Name="msgBox" VerticalAlignment="Top" Width="369" />
+        <Button Content="Send" Height="23" HorizontalAlignment="Left" Margin="387,71,0,0" Name="button1" VerticalAlignment="Top" Width="104" Click="button1_Click" />
     </Grid>
 </Window>
