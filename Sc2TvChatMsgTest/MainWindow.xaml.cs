@@ -25,6 +25,8 @@ namespace Sc2TvChatMsgTest
         const string gate = "http://chat.sc2tv.ru/gate.php";
         const string referrer = "http://sc2tv.ru/channel/czt";
 
+        List<Cookie> cookies = new List<Cookie>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -49,14 +51,6 @@ namespace Sc2TvChatMsgTest
             MessageBox.Show(data);
         }
 
-        //Task: make a post query to the server and receive a cookie which is required to proceed with Chat posts.
-        //Currently it doesn't work, but there is a bit of information which might help.
-        //Firstly, the login relies on submiting a form with hiddent inputs, so they need they need to be found and parsed.
-        //Luckily, only one value is changing over time (the form_build_id).
-        //Secondly, for login procedure cookies are not needed. I cleaned my browser of all related cookies, 
-        //and it accepted the request without problems.
-        //Thirdly, right now there might be something small missing. Taking a different aproach (through WebClient) might help.
-        //The task is completed when I reveive the required cookie after a request to the server.
         private void loginBtn_Click(object sender, RoutedEventArgs e)
         {
             //getting basic cookies and fetching form for login
@@ -78,8 +72,9 @@ namespace Sc2TvChatMsgTest
             string name = nameBox.Text;
             string pass = passBox.Text;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(baseUrl + "all?destination=node");
+            req.AllowAutoRedirect = false; //this is required to catch the response containing cookies, since the request is redirected to the main afterwards
             req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-            req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0";
+            req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0"; 
             req.KeepAlive = true;
             req.Headers = new WebHeaderCollection();
             req.Headers.Add("Accept-Language", "en-US,en;q=0.5");
@@ -100,12 +95,8 @@ namespace Sc2TvChatMsgTest
             //looking for required cookie (SESS4a29996287c6a61196a9cfc443f0fdb3)
             resp = (HttpWebResponse)req.GetResponse();
             resp.Close();
-            MessageBox.Show(resp.Cookies[0].Name);
-        }
+            string cookiesStr = resp.Headers["Set-Cookie"];
 
-        //this is an attemp at using a webclient for it
-        private void webClientLoginBtn_Click(object sender, RoutedEventArgs e)
-        {
 
         }
     }
